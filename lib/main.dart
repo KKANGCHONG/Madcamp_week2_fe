@@ -1,93 +1,167 @@
 import 'package:flutter/material.dart';
-import 'widgets.dart';
-import 'Tab1/Tab1_1.dart';
-import 'Tab2/Tab2_1.dart';
-import 'Tab3/Tab3_1.dart';
+import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'login_screen.dart';
+import 'tab1/tab1.dart';
+import 'tab2/tab2.dart';
+import 'tab3/tab3.dart';
+import 'tab4/tab4.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Flutter SDK 초기화
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Kakao SDK 초기화 (Native App Key)
+  KakaoSdk.init(
+    nativeAppKey: '0f0975de364e8bf139886b4cf89df7d9',
+  );
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      home: AppEntryPoint(),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        fontFamily: 'Pretendard',
+        scaffoldBackgroundColor: Colors.white,
+        splashColor: Colors.transparent, // Remove ripple effect
+        highlightColor: Colors.transparent, // Remove highlight effect
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-
-
-  final String title;
-
+class AppEntryPoint extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _AppEntryPointState createState() => _AppEntryPointState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AppEntryPointState extends State<AppEntryPoint> {
+  bool isLoggedIn = false; // Tracks if the user is logged in
 
-  void _incrementCounter() {
+  // Simulate login logic (can be replaced with real authentication logic)
+  void _onLoginSuccess() {
     setState(() {
+      isLoggedIn = true;
+    });
+  }
 
-      _counter++;
+  void _onLogout() {
+    setState(() {
+      isLoggedIn = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    return isLoggedIn
+      ? HomePage(
+          onLogout: _onLogout, // Pass logout callback to the main app screen
+        )
+      : LoginScreen(
+          onLoginSuccess: _onLoginSuccess, // Pass login success callback to login screen
+        );
+  }
+}
 
+class HomePage extends StatefulWidget {
+  final VoidCallback onLogout; // Callback for logout
+
+  const HomePage({required this.onLogout, super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0; // Default selected tab index
+
+  final List<String> _titles = [
+    'Home',
+    'Timetable',
+    'Friends',
+    'Mypage',
+  ];
+
+  final List<Widget> tabs = [
+    Tab1(),
+    Tab2(),
+    Tab3(),
+    Tab4(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80), // Custom height for the AppBar
+        child: AppBar(
+          title: Text(
+            _titles[_currentIndex], // Update title based on current index
+            style: const TextStyle(
+              color: Color(0xFF333333),
+              fontWeight: FontWeight.bold,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          ),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: false,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+      body: tabs[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: buildBottomNavigationItems(),
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        elevation: 0, // Optional: Remove shadow below the bar
+      ),
+    );
+  }
+
+  List<BottomNavigationBarItem> buildBottomNavigationItems() {
+    return [
+      BottomNavigationBarItem(
+        icon: _buildIcon(0, Icons.home),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: _buildIcon(1, Icons.calendar_today),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: _buildIcon(2, Icons.group),
+        label: '',
+      ),
+      BottomNavigationBarItem(
+        icon: _buildIcon(3, Icons.person),
+        label: '',
+      ),
+    ];
+  }
+
+  Widget _buildIcon(int index, IconData icon) {
+    final isSelected = _currentIndex == index;
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFF18C971) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(
+        icon,
+        color: isSelected ? Colors.white : const Color(0xFFBDBDBD),
+      ),
     );
   }
 }
