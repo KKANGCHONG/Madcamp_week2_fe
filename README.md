@@ -1,5 +1,5 @@
 # 1. 개요
-##  “What to do_ : 친구와 함께하는 일정 관리” ㅡ 프론트엔드 레포지토리
+##  “What to do_ : 친구와 함께하는 일정 관리” - 프론트엔드 레포지토리
 <img width="229" alt="app_icon" src="https://github.com/user-attachments/assets/bc4b687a-fda9-4265-994b-fbfaaa6d38fc" />
 
 # 1.1. 프로젝트 소개
@@ -47,22 +47,49 @@
 ![image](https://github.com/user-attachments/assets/27d2b19c-b43c-44a3-9adb-990e53513044)
 
 # 5. 기능 소개
+
 ## 5.0. 로그인 화면
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/a710c8c3-c30e-4c5a-8f82-296b41e49f0e" width="300">
+  <img src="https://github.com/user-attachments/assets/d172e302-f902-46db-b636-1469f4ea1706" width="300">
+</div>
+
 - 카카오 소셜 로그인 구현
+
 ## 5.1. To-do 리스트 탭
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/7f3805de-0cea-4a3c-bfb3-1579fa5fe267" width="300">
+  <img src="https://github.com/user-attachments/assets/8f31b007-033c-4342-994b-9f2578143211" width="300">
+</div>
 
 - 사용자가 할 일을 생성, 수정, 삭제 가능
 - 상단에 주간 캘린더를 위치해 날짜별로 할 일 확인
 - 공개 여부 설정 가능
+
 ## 5.2. 시간표탭
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ada27714-dc56-434a-bd4f-eb18ede8accd" width="300">
+  <img src="https://github.com/user-attachments/assets/71bbcfe9-2470-4009-a75c-0173533342a5" width="300">
+</div>
 
 - 에브리타임 API를 연결해 URL를 입력하면 2차원 배열로 변환
 - 변환된 배열을 통해 시간표 생성
 - 친구들을 선택하면 해당 친구와 겹쳐진 시간표 확인 가능
+
 ## 5.3. 친구탭
-- 개 여부가 오픈된 일정을 카테고리 별로 나눠 볼 수 있음
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/664e9408-0faa-488d-9feb-f27dfce3bfed" width="300">
+</div>
+
+- 공개 여부가 오픈된 일정을 카테고리 별로 나눠 볼 수 있음
 - 상단에 주간 캘린더가 위치해 날짜 별로 친구들의 할 일 확인 가능
+
 ## 5.4. 마이페이지
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/8ac6e0c6-c6a0-424c-af55-d3f8d285241c" width="300">
+  <img src="https://github.com/user-attachments/assets/2a2f8add-c98a-421a-b418-b4eb981ce8c2" width="300">
+</div>
+
 - QR 코드를 통해 손쉽게 친구 추가
 - 친구 목록 확인 가능
 - 이용 약관 확인 가능
@@ -74,4 +101,7 @@
 
 ### 이현정
 프론트엔드와 백엔드 레포를 나눠서 관리하거나 각각의 세부적인 기능 등, 처음 시도해볼게 많은 프로젝트였어요. 그리고 프론트 고마미 재부탁부터 백엔드 로직 작성, 서버 구성, 코든 구현 등 쉬운 작업은 없었지만, 맡겨준 백엔드 일을 하나씩 해결할 때마다 엄청 뿌듯했던 경험도 있었네요. 어렵지만 좋은 레벨업의 시간이었다고 생각하고 혼자서는 부족했던 디테일한 업무 부분까지 마무리할 수 있었어요! 특별히 많은 응원과 진행한 2주차 즐겁겠지? 맘속 감사를 전달합니다 👍
+
+### 7. APK 파일
+https://drive.google.com/file/d/1X9Dyh8kIjI0rPoDQ5G3wAwoWjXdrlnP0/view?usp=sharing
   
