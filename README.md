@@ -19,8 +19,7 @@
 
 # 팀원 소개
 
-| ![이명규]![myeongkyu](https://github.com/user-attachments/assets/c7c8a60f-c6ef-41bb-9055-d1ab42743ec5)
-| ![이현정]![hyunjung](https://github.com/user-attachments/assets/e4dd9a33-560a-4bc4-92bb-855deaaee15e)|
+| ![이명규]![myeongkyu](https://github.com/user-attachments/assets/c7c8a60f-c6ef-41bb-9055-d1ab42743ec5)| ![이현정]![hyunjung](https://github.com/user-attachments/assets/e4dd9a33-560a-4bc4-92bb-855deaaee15e)|
 |---------------------------------|---------------------------------|
 | **이명규**                      | **이현정**                      |
 | - KAIST 전산학부 20학번         | - 이화여자대학교 컴퓨터공학과 22학번 |
