@@ -1,5 +1,5 @@
-# 개요
-##  “What to do_ : 친구와 함께하는 일정 관리”
+# 1. 개요
+##  “What to do_ : 친구와 함께하는 일정 관리” ㅡ 프론트엔드 레포지토리
 <img width="229" alt="app_icon" src="https://github.com/user-attachments/assets/bc4b687a-fda9-4265-994b-fbfaaa6d38fc" />
 
 # 1.1. 프로젝트 소개
@@ -21,7 +21,7 @@
 - **Version Control**: GitHub
 
 
-# 팀원 소개
+# 2. 팀원 소개
 
 | ![이명규]![myeongkyu](https://github.com/user-attachments/assets/c7c8a60f-c6ef-41bb-9055-d1ab42743ec5)| ![이현정]![hyunjung](https://github.com/user-attachments/assets/e4dd9a33-560a-4bc4-92bb-855deaaee15e)|
 |---------------------------------|---------------------------------|
@@ -30,7 +30,7 @@
 | - [GitHub: mgklee](https://github.com/mgklee) | - [GitHub: KKANGCHONG](https://github.com/KKANGCHONG) |
 
 
-# API 명세서
+# 3. API 명세서
 
 | **Endpoint**                              | **Method** | **Description**               |
 |-------------------------------------------|------------|-------------------------------|
@@ -43,10 +43,10 @@
 | `/users/{user_id}/timetable`              | POST       | 시간표 저장                   |
 | `/users/{user_id}/timetable/{year}/{season}` | GET       | 시간표 조회                   |
 
-# ERD
+# 4. ERD
 ![image](https://github.com/user-attachments/assets/27d2b19c-b43c-44a3-9adb-990e53513044)
 
-# 기능 소개
+# 5. 기능 소개
 ## 5.0. 로그인 화면
 - 카카오 소셜 로그인 구현
 ## 5.1. To-do 리스트 탭
