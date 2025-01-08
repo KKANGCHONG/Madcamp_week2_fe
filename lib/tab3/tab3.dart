@@ -13,7 +13,7 @@ class Tab3 extends StatefulWidget {
 }
 
 class _Tab3State extends State<Tab3> {
-  final String baseUrl = 'http://172.10.7.56:8000';
+  final String baseUrl = 'http://172.10.7.57:8000';
   final List<String> weekDays = ['일', '월', '화', '수', '목', '금', '토']; // Fixed week days
   late final int initialPage; // Set today as the initial page
   DateTime? selectedDay; // Tracks the currently selected day
@@ -35,7 +35,7 @@ class _Tab3State extends State<Tab3> {
 
     try {
       final response = await http.get(
-          Uri.parse('$baseUrl/users/${widget.userInfo['id']}/friends/todos?date=${DateFormat('yyyy-MM-dd').format(selectedDate)}')
+        Uri.parse('$baseUrl/users/${widget.userInfo['id']}/friends/todos?date=${DateFormat('yyyy-MM-dd').format(selectedDate)}')
       );
 
       print('Response Status: ${response.statusCode}');
@@ -44,7 +44,7 @@ class _Tab3State extends State<Tab3> {
       if (response.statusCode == 200) {
         setState(() {
           friendsTodos = List<Map<String, dynamic>>.from(
-              jsonDecode(utf8.decode(response.bodyBytes)) // UTF-8 디코딩 후 JSON 디코딩
+            jsonDecode(utf8.decode(response.bodyBytes)) // UTF-8 디코딩 후 JSON 디코딩
           );
         });
       } else {
@@ -70,21 +70,21 @@ class _Tab3State extends State<Tab3> {
             final profileImage = friendTodos['profile_image'];
             final categories = List<Map<String, dynamic>>.from(friendTodos['categories']);
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
                       CircleAvatar(
                         radius: 30,
                         backgroundImage: profileImage != null
-                            ? NetworkImage(profileImage)
-                            : null,
+                        ? NetworkImage(profileImage)
+                        : null,
                         child: profileImage == null
-                            ? const Icon(Icons.person, size: 30)
-                            : null,
+                        ? const Icon(Icons.person, size: 30)
+                        : null,
                       ),
                       const SizedBox(width: 10),
                       Text(
@@ -96,73 +96,75 @@ class _Tab3State extends State<Tab3> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                // 카테고리별 카드 가로 스크롤
-                SizedBox(
-                  height: 150,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, categoryIndex) {
-                      final category = categories[categoryIndex];
-                      final todos = List<Map<String, dynamic>>.from(category['todos']);
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        padding: const EdgeInsets.all(8.0),
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // 카테고리 제목
-                            Text(
-                              category['category'] ?? "Unknown",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  const SizedBox(height: 20),
+                  // 카테고리별 카드 가로 스크롤
+                  SizedBox(
+                    height: 150,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, categoryIndex) {
+                        final category = categories[categoryIndex];
+                        final todos = List<Map<String, dynamic>>.from(category['todos']);
+                        return Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF7F7F7),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                offset: Offset(2, 2),
+                                blurRadius: 5,
+                                spreadRadius: 2,
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            // 카테고리 내 할 일
-                            Expanded(
-                              child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: todos.length,
-                                itemBuilder: (context, todoIndex) {
-                                  final todo = todos[todoIndex];
-                                  return Row(
-                                    children: [
-                                      const Icon(Icons.check_box_outline_blank, size: 16),
-                                      const SizedBox(width: 5),
-                                      Expanded(
-                                        child: Text(
-                                          todo['task'] ?? "No Task",
-                                          style: const TextStyle(fontSize: 14),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 카테고리 제목
+                              Text(
+                                category['category'] ?? "Unknown",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              // 카테고리 내 할 일
+                              Expanded(
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: todos.length,
+                                  itemBuilder: (context, todoIndex) {
+                                    final todo = todos[todoIndex];
+                                    return Row(
+                                      children: [
+                                        todo['isCompleted']
+                                        ? const Icon(Icons.check_box, size: 16)
+                                        : const Icon(Icons.check_box_outline_blank, size: 16),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Text(
+                                            todo['task'] ?? "No Task",
+                                            style: const TextStyle(fontSize: 14),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           })
         ],
@@ -201,10 +203,10 @@ class _Tab3State extends State<Tab3> {
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                             color: index == 0
-                                ? Colors.red // Sunday is red
-                                : index == 6
-                                ? Colors.blue // Saturday is blue
-                                : Colors.black,
+                            ? Colors.red // Sunday is red
+                            : index == 6
+                            ? Colors.blue // Saturday is blue
+                            : Colors.black,
                           ),
                         ),
                       ),
@@ -259,12 +261,12 @@ class _Tab3State extends State<Tab3> {
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: _isSelected(day)
-                                                ? Colors.white
-                                                : (index == 0
-                                                ? Colors.red
-                                                : index == 6
-                                                ? Colors.blue
-                                                : Colors.black),
+                                            ? Colors.white
+                                            : (index == 0
+                                            ? Colors.red
+                                            : index == 6
+                                            ? Colors.blue
+                                            : Colors.black),
                                           ),
                                         ),
                                       ],
