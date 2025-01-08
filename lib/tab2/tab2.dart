@@ -13,68 +13,61 @@ class Tab2 extends StatefulWidget {
 
 class _Tab2State extends State<Tab2> {
   final TextEditingController _urlController = TextEditingController(); // URL 입력 컨트롤러
-  final String baseUrl = 'http://172.10.7.57:8000';
+  final String baseUrl = 'http://172.10.7.56:8000';
   List<List<int>> binaryList = [];
-  // List<List<int>> binaryList = [
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [0, 1, 0, 1, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [1, 0, 1, 0, 0, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 0, 1, 1, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 1, 1, 1, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0],
-  // ];
+  List<Map<String, dynamic>> friends = []; // 친구 목록
+
   late int year;
   late int season;
   String semester = '2024 2학기';
+
+  // 친구 목록 불러오기
+  Future<void> _loadFriends() async {
+    try {
+      final fetchedFriends = await fetchFriends(widget.userInfo['id']);
+      setState(() {
+        friends = fetchedFriends.map((friend) {
+          return {
+            ...friend,
+            'isSelected': false, // 초기 체크박스 상태
+          };
+        }).toList();
+      });
+    } catch (e) {
+      print("Error loading friends: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('친구 목록을 불러오는 데 실패했습니다.')),
+      );
+    }
+  }
+
+  // 친구 목록 API 호출 함수
+  Future<List<Map<String, dynamic>>> fetchFriends(String userId) async {
+    final url = Uri.parse("http://172.10.7.56:8000/users/$userId/friends");
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        return List<Map<String, dynamic>>.from(responseData['friends']);
+      } else if (response.statusCode == 404) {
+        print("No friends found.");
+        return [];
+      } else {
+        print("Failed to fetch friends: ${response.body}");
+        throw Exception("Failed to fetch friends");
+      }
+    } catch (e) {
+      print("Error fetching friends: $e");
+      throw Exception("Error fetching friends");
+    }
+  }
 
   // URL 제출 함수
   void _submitUrl(String url) async {
@@ -178,17 +171,26 @@ class _Tab2State extends State<Tab2> {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 20),
+              // TextField
               binaryList.isEmpty
-                  ? TextField(
-                controller: _urlController,
-                decoration: InputDecoration(
-                  hintText: '에브리타임 시간표 URL을 입력해 주세요.',
-                  border: OutlineInputBorder(
+                  ? Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF7F7F7), // 배경색 설정
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  child: TextField(
+                    controller: _urlController,
+                    decoration: InputDecoration(
+                      hintText: '에브리타임 시간표 URL을 입력해 주세요.',
+                      border: InputBorder.none, // 테두리 제거
+                    ),
+                    onSubmitted: (value) => _submitUrl(value),
+                  ),
                 ),
-                // 키보드에서 Enter/확인 버튼을 누르면 URL 제출
-                onSubmitted: (value) => _submitUrl(value),
               )
                   : LayoutBuilder(
                 builder: (context, constraints) {
@@ -294,54 +296,66 @@ class _Tab2State extends State<Tab2> {
             ],
           ),
         ),
-        // DraggableScrollableSheet(
-        //   initialChildSize: 0.1, // Start with 10% of screen height
-        //   minChildSize: 0.1, // Minimum size
-        //   maxChildSize: 0.8, // Maximum size
-        //   builder: (context, scrollController) {
-        //     return Container(
-        //       decoration: BoxDecoration(
-        //         color: Colors.white,
-        //         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        //         boxShadow: [
-        //           BoxShadow(
-        //             color: Colors.black26,
-        //             blurRadius: 10,
-        //             spreadRadius: 2,
-        //           ),
-        //         ],
-        //       ),
-        //       child: Column(
-        //         children: [
-        //           // A small handle to indicate the draggable area
-        //           Container(
-        //             margin: EdgeInsets.only(top: 8),
-        //             width: 40,
-        //             height: 5,
-        //             decoration: BoxDecoration(
-        //               color: Colors.grey[400],
-        //               borderRadius: BorderRadius.circular(10),
-        //             ),
-        //           ),
-        //           Expanded(
-        //             child: ListView.builder(
-        //               controller: scrollController,
-        //               itemCount: friends.length,
-        //               itemBuilder: (context, index) {
-        //                 return ListTile(
-        //                   leading: CircleAvatar(
-        //                     child: Text(friends[index][0]),
-        //                   ),
-        //                   title: Text(friends[index]),
-        //                 );
-        //               },
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     );
-        //   },
-        // ),
+        // DraggableScrollableSheet for Friends List
+        DraggableScrollableSheet(
+          initialChildSize: 0.1, // 초기 높이 (화면의 20%)
+          minChildSize: 0.1, // 최소 높이
+          maxChildSize: 0.8, // 최대 높이 (화면의 80%)
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, -2),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // 위젯 상단의 드래그 핸들
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    width: 40,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 친구 목록
+                  Expanded(
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: friends.length,
+                      itemBuilder: (context, index) {
+                        final friend = friends[index];
+                        return ListTile(
+                          leading: Checkbox(
+                            value: friend['isSelected'],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                friends[index]['isSelected'] = value!;
+                              });
+                            },
+                          ),
+                          title: Text(friend['nickname'] ?? "Unknown"),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ],
     );
   }

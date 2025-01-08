@@ -92,10 +92,10 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // Default selected tab index
 
   final List<String> _titles = [
-    'Home',
-    'Timetable',
-    'Friends',
-    'My Page',
+    '',
+    '',
+    '',
+    '',
   ];
 
   late List<Widget> tabs = [

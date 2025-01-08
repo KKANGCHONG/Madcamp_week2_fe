@@ -13,7 +13,7 @@ class Tab3 extends StatefulWidget {
 }
 
 class _Tab3State extends State<Tab3> {
-  final String baseUrl = 'http://172.10.7.57:8000';
+  final String baseUrl = 'http://172.10.7.56:8000';
   final List<String> weekDays = ['일', '월', '화', '수', '목', '금', '토']; // Fixed week days
   late final int initialPage; // Set today as the initial page
   DateTime? selectedDay; // Tracks the currently selected day
@@ -64,113 +64,122 @@ class _Tab3State extends State<Tab3> {
           // Fixed Weekly Calendar
           _buildWeeklyCalendar(context),
 
-          ...friendsTodos.map((element) {
-            final friendTodos = element;
-            final nickname = friendTodos['nickname'];
-            final profileImage = friendTodos['profile_image'];
-            final categories = List<Map<String, dynamic>>.from(friendTodos['categories']);
+          // 스크롤 가능한 영역을 Expanded로 래핑
+          Expanded(
+            child: ListView(
+              children: [
+                ...friendsTodos.map((element) {
+                  final friendTodos = element;
+                  final nickname = friendTodos['nickname'];
+                  final profileImage = friendTodos['profile_image'];
+                  final categories = List<Map<String, dynamic>>.from(friendTodos['categories']);
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: profileImage != null
-                        ? NetworkImage(profileImage)
-                        : null,
-                        child: profileImage == null
-                        ? const Icon(Icons.person, size: 30)
-                        : null,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        nickname ?? "Unknown",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundImage: profileImage != null
+                                  ? NetworkImage(profileImage)
+                                  : null,
+                              child: profileImage == null
+                                  ? const Icon(Icons.person, size: 23)
+                                  : null,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              nickname ?? "Unknown",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  // 카테고리별 카드 가로 스크롤
-                  SizedBox(
-                    height: 150,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (context, categoryIndex) {
-                        final category = categories[categoryIndex];
-                        final todos = List<Map<String, dynamic>>.from(category['todos']);
-                        return Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF7F7F7),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                offset: Offset(2, 2),
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 카테고리 제목
-                              Text(
-                                category['category'] ?? "Unknown",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                        const SizedBox(height: 20),
+                        // 카테고리별 카드 가로 스크롤
+                        SizedBox(
+                          height: 150,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categories.length,
+                            itemBuilder: (context, categoryIndex) {
+                              final category = categories[categoryIndex];
+                              final todos = List<Map<String, dynamic>>.from(category['todos']);
+                              return Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: const EdgeInsets.all(8.0),
+                                width: 200,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF7F7F7), // Fill color
+                                  borderRadius: BorderRadius.circular(10), // Rounded corners
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x9DA5A0).withOpacity(0.2), // Shadow color with 20% opacity
+                                      offset: Offset(2, 2), // X: 2, Y: 2
+                                      blurRadius: 2, // Blur radius
+                                      spreadRadius: 0, // Spread radius
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              // 카테고리 내 할 일
-                              Expanded(
-                                child: ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: todos.length,
-                                  itemBuilder: (context, todoIndex) {
-                                    final todo = todos[todoIndex];
-                                    return Row(
-                                      children: [
-                                        todo['isCompleted']
-                                        ? const Icon(Icons.check_box, size: 16)
-                                        : const Icon(Icons.check_box_outline_blank, size: 16),
-                                        const SizedBox(width: 5),
-                                        Expanded(
-                                          child: Text(
-                                            todo['task'] ?? "No Task",
-                                            style: const TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 카테고리 제목
+                                    Text(
+                                      category['category'] ?? "Unknown",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    // 카테고리 내 할 일
+                                    Expanded(
+                                      child: ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: todos.length,
+                                        itemBuilder: (context, todoIndex) {
+                                          final todo = todos[todoIndex];
+                                          return Row(
+                                            children: [
+                                              todo['isCompleted']
+                                                  ? const Icon(Icons.check_box, size: 16)
+                                                  : const Icon(Icons.check_box_outline_blank, size: 16),
+                                              const SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  todo['task'] ?? "No Task",
+                                                  style: const TextStyle(fontSize: 15),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            );
-          })
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+
 
   Widget _buildWeeklyCalendar(BuildContext context) {
     return Column(
